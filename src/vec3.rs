@@ -7,7 +7,7 @@ pub struct Vec3 {
     pub z: f64,
 }
 
-type Point3 = Vec3;
+pub type Point3 = Vec3;
 
 impl Neg for Vec3 {
     type Output = Self;
@@ -81,6 +81,18 @@ impl Mul for Vec3 {
            x: self.x * rhs.x,
            y: self.y * rhs.y,
            z: self.z * rhs.z
+       }
+    }
+}
+
+impl Mul<Vec3> for f64 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: Vec3) -> Self::Output {
+       Vec3 {
+           x: self * rhs.x,
+           y: self * rhs.y,
+           z: self * rhs.z
        }
     }
 }
