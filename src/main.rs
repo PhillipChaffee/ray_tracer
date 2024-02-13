@@ -7,11 +7,13 @@ extern crate env_logger;
 
 use log::{info};
 use crate::ray::Ray;
-use crate::vec3::{Point3, Vec3};
+use crate::vec3::{Point3, Vec3, unit_vector};
 use crate::color::Color;
 
 fn ray_color(ray: &Ray) -> Color {
-    return Color { x: 0.0, y: 0.0, z: 0.0 };
+    let unit_direction = unit_vector(ray.direction());
+    let a = 0.5 * (unit_direction.y + 1.0);
+    return (1.0 - a) * Color { x: 1.0, y: 1.0, z: 1.0 } + a * Color { x: 0.5, y: 0.7, z: 1.0 };
 }
 
 fn main() {
@@ -42,7 +44,7 @@ fn main() {
     let pixel_delta_v = viewport_v / image_height as f64;
 
     // Calculate the location of the upper left pixel.
-    let viewport_upper_left = camera_center - Vec3 { x: 0.0, y: 0.0, z: focal_length } - viewport_u/2.0 - viewport_v/ 2.0;
+    let viewport_upper_left = camera_center - Vec3 { x: 0.0, y: 0.0, z: focal_length } - viewport_u / 2.0 - viewport_v / 2.0;
     let pixel00_location = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
     // Render

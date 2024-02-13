@@ -56,7 +56,7 @@ impl Add for Vec3 {
         Self {
             x: self.x + rhs.x,
             y: self.y + rhs.y,
-            z: self.z + rhs.z
+            z: self.z + rhs.z,
         }
     }
 }
@@ -68,7 +68,7 @@ impl Sub for Vec3 {
         Self {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
-            z: self.z - rhs.z
+            z: self.z - rhs.z,
         }
     }
 }
@@ -77,11 +77,11 @@ impl Mul for Vec3 {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
-       Self {
-           x: self.x * rhs.x,
-           y: self.y * rhs.y,
-           z: self.z * rhs.z
-       }
+        Self {
+            x: self.x * rhs.x,
+            y: self.y * rhs.y,
+            z: self.z * rhs.z,
+        }
     }
 }
 
@@ -89,11 +89,11 @@ impl Mul<Vec3> for f64 {
     type Output = Vec3;
 
     fn mul(self, rhs: Vec3) -> Self::Output {
-       Vec3 {
-           x: self * rhs.x,
-           y: self * rhs.y,
-           z: self * rhs.z
-       }
+        Vec3 {
+            x: self * rhs.x,
+            y: self * rhs.y,
+            z: self * rhs.z,
+        }
     }
 }
 
@@ -101,11 +101,11 @@ impl Mul<f64> for Vec3 {
     type Output = Self;
 
     fn mul(self, rhs: f64) -> Self::Output {
-       Self {
-           x: self.x * rhs,
-           y: self.y * rhs,
-           z: self.z * rhs
-       }
+        Self {
+            x: self.x * rhs,
+            y: self.y * rhs,
+            z: self.z * rhs,
+        }
     }
 }
 
@@ -113,7 +113,7 @@ impl Div<f64> for Vec3 {
     type Output = Self;
 
     fn div(self, rhs: f64) -> Self::Output {
-       return self * (1.0/rhs);
+        return self * (1.0 / rhs);
     }
 }
 
@@ -125,10 +125,8 @@ fn cross(u: Vec3, v: Vec3) -> Vec3 {
     Vec3 {
         x: u.y * v.z - u.z * v.y,
         y: u.z * v.x - u.x * v.y,
-        z: u.x * v.y - u.y * v.x
+        z: u.x * v.y - u.y * v.x,
     }
 }
 
-fn unit_vector(v: Vec3) -> Vec3 {
-    return v / v.length();
-}
+pub fn unit_vector(v: Vec3) -> Vec3 { return v / v.length(); }
