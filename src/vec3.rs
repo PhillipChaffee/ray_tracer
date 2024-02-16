@@ -40,6 +40,10 @@ impl DivAssign<f64> for Vec3 {
 }
 
 impl Vec3 {
+    pub fn new(x: f64, y: f64, z: f64) -> Point3 {
+        Point3 { x, y, z }
+    }
+
     fn length(&self) -> f64 {
         return self.length_squared().sqrt();
     }
@@ -117,7 +121,7 @@ impl Div<f64> for Vec3 {
     }
 }
 
-fn dot(u: Vec3, v: Vec3) -> f64 {
+pub fn dot(u: Vec3, v: Vec3) -> f64 {
     return u.x * v.x + u.y * v.y + u.z * v.z;
 }
 

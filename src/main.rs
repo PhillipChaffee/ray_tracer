@@ -7,10 +7,24 @@ extern crate env_logger;
 
 use log::{info};
 use crate::ray::Ray;
-use crate::vec3::{Point3, Vec3, unit_vector};
+use crate::vec3::{Point3, Vec3, unit_vector, dot};
 use crate::color::Color;
 
+fn hit_sphere(center: Point3, radius: f64, ray: &Ray) -> bool {
+    let oc = ray.origin() - center;
+    let a = dot(ray.direction(), ray.direction());
+    let b = 2.0 * dot(ray.direction(), oc);
+    let c = dot(oc, oc) - radius * radius;
+
+    let discriminant = b*b - 4.0*a*c;
+    return discriminant >= 0f64;
+}
+
 fn ray_color(ray: &Ray) -> Color {
+    if hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray) {
+        return Color::new(1.0, 0.0, 0.0);
+    }
+
     let unit_direction = unit_vector(ray.direction());
     let a = 0.5 * (unit_direction.y + 1.0);
     return (1.0 - a) * Color { x: 1.0, y: 1.0, z: 1.0 } + a * Color { x: 0.5, y: 0.7, z: 1.0 };
