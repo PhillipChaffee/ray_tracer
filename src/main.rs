@@ -1,6 +1,8 @@
 mod vec3;
 mod color;
 mod ray;
+mod hit;
+mod sphere;
 
 extern crate log;
 extern crate env_logger;
