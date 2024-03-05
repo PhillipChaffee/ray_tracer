@@ -3,36 +3,23 @@ mod color;
 mod ray;
 mod hit;
 mod sphere;
+mod util;
+mod interval;
 
 extern crate log;
 extern crate env_logger;
 
 use log::{info};
 use crate::ray::Ray;
-use crate::vec3::{Point3, Vec3, unit_vector, dot};
+use crate::vec3::{Point3, Vec3, unit_vector};
 use crate::color::Color;
+use crate::hit::{Hittable, HittableList};
+use crate::interval::Interval;
+use crate::sphere::Sphere;
 
-fn hit_sphere(center: Point3, radius: f64, ray: &Ray) -> f64 {
-    let oc = ray.origin() - center;
-    let a = dot(ray.direction(), ray.direction());
-    let b = 2.0 * dot(ray.direction(), oc);
-    let c = dot(oc, oc) - radius * radius;
-
-    let discriminant = b*b - 4.0*a*c;
-    if discriminant < 0.0 {
-        return -1.0;
-    } else {
-        return (-b - discriminant.sqrt()) / (2.0*a);
-    }
-}
-
-fn ray_color(ray: &Ray) -> Color {
-    let sphere_center = Point3::new(0.0, 0.0, -1.0);
-    let t = hit_sphere(sphere_center, 0.5, ray);
-    if t > 0.0 {
-        let n = unit_vector(ray.at(t) - sphere_center);
-        return 0.5*Color::new(n.x+1.0, n.y+1.0, n.z+1.0);
-    }
+fn ray_color(ray: &Ray, world: &Box<&dyn Hittable>) -> Color {
+    let hit_record = world.hit(ray, Interval::new(0.0, f64::INFINITY));
+    if hit_record.hit { return 0.5 * (hit_record.normal.unwrap() + Color::new(1.0, 1.0, 1.0)); }
 
     let unit_direction = unit_vector(ray.direction());
     let a = 0.5 * (unit_direction.y + 1.0);
@@ -50,6 +37,13 @@ fn main() {
     // Calculate the image height, and ensure that it is at least 1.
     let mut image_height = (image_width as f64 / aspect_ratio) as i32;
     image_height = if image_height < 1 { 1 } else { image_height };
+
+    // World
+
+    let mut world = HittableList::new();
+
+    world.add(Box::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5)));
+    world.add(Box::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0)));
 
     // Camera
 
@@ -82,7 +76,7 @@ fn main() {
             let ray_direction = pixel_center - camera_center;
             let ray = Ray::new(camera_center, ray_direction);
 
-            let pixel_color = ray_color(&ray);
+            let pixel_color = ray_color(&ray, &Box::new(&world));
             color::write_color(pixel_color);
         }
     }
